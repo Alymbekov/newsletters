@@ -1,0 +1,37 @@
+{% extends 'bases/base.html' %}
+
+{% load crispy_forms_tags %}
+{% crispy form form.helper %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-lg-offset-3">
+                <h3 class="text-center">
+                    Отписаться из подписки на уведомления
+                {% if messages %}
+                {% for message in messages %}
+                <div {% if message.tags %} class="{{message.tags}}" {% endif %} role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        {{message}}                     
+                    </button>
+                  </div>
+                {% endfor %}
+                {% else %}
+                </h3>
+                <form action="{% url 'newsletter_unsubscribe' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="input_group">
+                        {% crispy form %}
+                        <!-- {{form|crispy}} -->
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary">
+                                Отписаться 
+                            </button>
+                        </span>
+                    </div>    
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+{% endblock%}
