@@ -15,9 +15,11 @@
             </a>
         </div>
     <div class="col-sm-2">
+        <a href="{% url 'control-newsletter_delete' pk=newsletter.pk%}">
             <button>
                 Delete
             </button>
+        </a>
     </div>
     <div class="col-sm-2">
         <a href="{% url 'control_newsletter' %}">

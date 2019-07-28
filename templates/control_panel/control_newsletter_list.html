@@ -37,7 +37,7 @@
                         <td>{{item.created}}</td>
                         <td>{{item.updated}}</td>
                         <td><a href="{% url 'control_newsletter_edit' pk=item.pk %}">Edit</a></td>
-                        <td><a href="">Delete</a></td>
+                        <td><a href="{% url 'control_newsletter_delete' pk=item.pk %}">Delete</a></td>
                     </tr>
                 {% endfor %}
             </tbody>
