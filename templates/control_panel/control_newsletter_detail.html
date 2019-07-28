@@ -8,13 +8,15 @@
     {{ newsletter.body }}
     <div class=""col-sm-8 col-sm-offset-4>
         <div class="col-sm-2">
-            <button>
+            <a href="{% url 'control_newsletter_edit' pk=newsletter.pk %}">
+            <button class="btn btn-info">
                 Edit
             </button>
+            </a>
         </div>
     <div class="col-sm-2">
             <button>
-                Edit
+                Delete
             </button>
     </div>
     <div class="col-sm-2">

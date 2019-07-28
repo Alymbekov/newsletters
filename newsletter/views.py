@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from .models import NewsLetterUser, Newsletter
 from .forms import NewsLetterUserSignUpForm, NewsletterCreationForm
@@ -166,3 +166,36 @@ def control_newsletter_detail(request, pk):
     }
     template = "control_panel/control_newsletter_detail.html"
     return render(request, template, context)
+
+
+def control_newsletter_edit(request, pk):
+    newsletter = get_object_or_404(Newsletter, pk=pk)
+
+    if request.method == "POST":
+        form = NewsletterCreationForm(request.POST, instance=newsletter)
+
+        if form.is_valid():
+            newsletter = form.save()
+            if newsletter.status == "Published":
+                body = newsletter.body
+                from_email = settings.EMAIL_HOST_USER
+                subject = newsletter.subject
+
+                for email in newsletter.email.all():
+                    message = EmailMultiAlternatives(
+                        subject=subject, body=body, from_email=from_email, to=[email.email],
+                    )
+                    html_template = get_template("newsletters/sms.html").render()
+                    message.attach_alternative(html_template, "text/html")
+                    message.send()
+            return redirect("control_newsletter_detail", pk=newsletter.pk)
+    else:
+        form = NewsletterCreationForm(instance=newsletter)
+
+    context = {
+        "form": form,
+        }
+    template = "control_panel/control_newsletter.html"
+
+    return render(request, template, context)
+
