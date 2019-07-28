@@ -1,8 +1,6 @@
-{% extends 'control_panel/control_base.html' %}
-{% load crispy_forms_tags %}
-{% load static %}
+{% extends "control_panel/control_base.html" %}
 
-        {% block content %}
+{% block content %}
 
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
     <div class="row">
@@ -10,29 +8,31 @@
             <center><h1 class="page-header">
                 All NewsLetters
             </h1>
-        </center>
+        <div class="col-sm-2">
+            <a href="{% url "control_newsletter" %}">
+                <button type="submit" class="btn btn-success">
+                    Новое письмо
+                </button>
+            </a>
+        </div>
+                        </center>
 
         </div>
     </div>
-    <form action="" method="POST">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <button type="submit" class="btn btn-outline-primary w-50">Send</button>
-    </form>
-    <div class="table-responsive table-hover" style="margin-top: 50px;">
-
+    <div class="table-responsive table-hover">
         <table class="table">
             <thead>
                 <th>Subject</th>
                 <th>Status</th>
                 <th>Created</th>
+                <th>Updated</th>
                 <th>Edit</th>
                 <th>Delete</th>
             </thead>
             <tbody>
-                {% for item in letters %}
+                {% for item in page_object %}
                     <tr>
-                        <td>{{item.subject}}</td>
+                        <td><a href="{% url 'control_newsletter_detail' pk=item.pk %}">{{item.subject}}</a></td>
                         <td>{{item.status}}</td>
                         <td>{{item.created}}</td>
                         <td>{{item.updated}}</td>
@@ -43,6 +43,6 @@
             </tbody>
         </table>
     </div>
+{% include "pagination.html" %}
 </div>
 {% endblock %}
-

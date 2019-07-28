@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from .models import NewsLetterUser, Newsletter
 from .forms import NewsLetterUserSignUpForm, NewsletterCreationForm
@@ -6,11 +6,15 @@ from django.contrib import messages
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.conf import settings
 from django.template.loader import get_template
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from celery import shared_task
+
+
 
 def index(request):
     return HttpResponse("Hello world")
 
-
+@shared_task
 def newsletter_signup(request):
     form = NewsLetterUserSignUpForm(request.POST or None)
 
@@ -43,7 +47,6 @@ def newsletter_signup(request):
                 html_template = get_template("newsletters/sign_up_email.html").render()
                 message.attach_alternative(html_template, "text/html")
                 message.send()
-            
 
     context = {
         'form': form,
@@ -52,7 +55,7 @@ def newsletter_signup(request):
     template = 'newsletters/signup.html'
     return render(request, template, context)
 
-
+@shared_task
 def newsletter_unsubscribe(request):
     form = NewsLetterUserSignUpForm(request.POST or None)
 
@@ -86,12 +89,12 @@ def newsletter_unsubscribe(request):
             )
     
     context = {
-        'form':form,
+        'form': form,
     }
     template = 'newsletters/unsubscribe.html'
     return render(request, template, context)
 
-
+@shared_task
 def control_newsletter(request):
     form = NewsletterCreationForm(request.POST or None)
 
@@ -125,3 +128,41 @@ def control_newsletter(request):
     template = 'control_panel/control_newsletter.html'
     return render(request, template, context)
 
+
+def control_newsletter_list(request):
+    newsletters = Newsletter.objects.all()
+
+    paginator = Paginator(newsletters, 5)
+
+    page_number = request.GET.get('page', 1)
+    page = paginator.get_page(page_number)
+
+    is_paginated = page.has_other_pages()
+
+    if page.has_previous():
+        previus_url = '?page={}'.format(page.previous_page_number())
+    else:
+        previus_url = ''
+    if page.has_next():
+        next_url = '?page={}'.format(page.next_page_number())
+    else:
+        next_url = ''
+
+    context = {
+        'page_object': page,
+        'is_paginated': is_paginated,
+        'next_url': next_url,
+        'previus_url': previus_url
+    }
+    template = "control_panel/control_newsletter_list.html"
+    return render(request, template, context)
+
+
+def control_newsletter_detail(request, pk):
+    newsletter = get_object_or_404(Newsletter, pk=pk)
+
+    context = {
+        "newsletter": newsletter
+    }
+    template = "control_panel/control_newsletter_detail.html"
+    return render(request, template, context)
