@@ -1,0 +1,26 @@
+{% extends "control_panel/control_base.html" %}
+
+{% block title %} Участники {% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="row">
+
+            {% for subscriber in subscribers %}
+
+                <div class="container card">
+                <div class="row">
+                    <div class="col-2">{{ subscriber.first_name }}</div>
+                    <div class="col-2">{{ subscriber.last_name }}</div>
+                    <div class="col-4">{{ subscriber.email }}</div>
+                    <div class="col-2">{{ subscriber.gender }}</div>
+                    <div class="col-2">{{ subscriber.mobile_phone }}</div>
+                </div>
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,7 +1,10 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
-from .models import NewsLetterUser, Newsletter
-from .forms import NewsLetterUserSignUpForm, NewsletterCreationForm
+from django.views.generic import ListView
+
+from .models import Subscriber, Newsletter
+from .forms import SubscriberSignUpForm, NewsletterCreationForm
 from django.contrib import messages
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.conf import settings
@@ -10,17 +13,18 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from celery import shared_task
 
 
-
 def index(request):
     return HttpResponse("Hello world")
 
+
 @shared_task
+@login_required
 def newsletter_signup(request):
-    form = NewsLetterUserSignUpForm(request.POST or None)
+    form = SubscriberSignUpForm(request.POST or None)
 
     if form.is_valid():
         instance = form.save(commit=False)
-        if NewsLetterUser.objects.filter(email=instance.email).exists():
+        if Subscriber.objects.filter(email=instance.email).exists():
             messages.warning(request, 
                             'Ваша электронная почта уже существует в нашей базе данных',
                             "alert alert-warning alert-dismissible",
@@ -55,14 +59,16 @@ def newsletter_signup(request):
     template = 'newsletters/signup.html'
     return render(request, template, context)
 
+
 @shared_task
+@login_required
 def newsletter_unsubscribe(request):
-    form = NewsLetterUserSignUpForm(request.POST or None)
+    form = SubscriberSignUpForm(request.POST or None)
 
     if form.is_valid():
         instance = form.save(commit=False)
-        if NewsLetterUser.objects.filter(email=instance.email).exists():
-            NewsLetterUser.objects.filter(email=instance.email).delete()
+        if Subscriber.objects.filter(email=instance.email).exists():
+            Subscriber.objects.filter(email=instance.email).delete()
             messages.success(request,
                              'Ваш email успешно удалён!', 
                              'alert alert-success alert-dismissible',
@@ -94,7 +100,9 @@ def newsletter_unsubscribe(request):
     template = 'newsletters/unsubscribe.html'
     return render(request, template, context)
 
+
 @shared_task
+@login_required
 def control_newsletter(request):
     form = NewsletterCreationForm(request.POST or None)
 
@@ -106,7 +114,7 @@ def control_newsletter(request):
             from_email = settings.EMAIL_HOST_USER
             subject = newsletter.subject
 
-            for email in newsletter.email.all():
+            for email in newsletter.subscriber.all():
                 message = EmailMultiAlternatives(
                     subject=subject, body=body, from_email=from_email, to=[email.email],
                 )
@@ -129,6 +137,7 @@ def control_newsletter(request):
     return render(request, template, context)
 
 
+@login_required
 def control_newsletter_list(request):
     newsletters = Newsletter.objects.all()
 
@@ -158,6 +167,7 @@ def control_newsletter_list(request):
     return render(request, template, context)
 
 
+@login_required
 def control_newsletter_detail(request, pk):
     newsletter = get_object_or_404(Newsletter, pk=pk)
 
@@ -168,6 +178,7 @@ def control_newsletter_detail(request, pk):
     return render(request, template, context)
 
 
+@login_required
 def control_newsletter_edit(request, pk):
     newsletter = get_object_or_404(Newsletter, pk=pk)
 
@@ -181,7 +192,7 @@ def control_newsletter_edit(request, pk):
                 from_email = settings.EMAIL_HOST_USER
                 subject = newsletter.subject
 
-                for email in newsletter.email.all():
+                for email in newsletter.subscriber.all():
                     message = EmailMultiAlternatives(
                         subject=subject, body=body, from_email=from_email, to=[email.email],
                     )
@@ -200,6 +211,7 @@ def control_newsletter_edit(request, pk):
     return render(request, template, context)
 
 
+@login_required
 def control_newsletter_delete(request, pk):
     newsletter = get_object_or_404(Newsletter, pk=pk)
 
@@ -218,3 +230,15 @@ def control_newsletter_delete(request, pk):
 
     template = "control_panel/control_newsletter_delete.html"
     return render(request, template, context)
+
+
+class SubscriberListView(ListView):
+    template_name = "newsletters/subscriber_list.html"
+    context_object_name = "subscribers"
+    queryset = Subscriber.objects.all()
+    class Meta:
+        model = Subscriber
+        fields = [
+            '__all__'
+        ]
+

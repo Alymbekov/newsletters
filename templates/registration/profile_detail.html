@@ -1,0 +1,14 @@
+{% extends "control_panel/control_base.html" %}
+{% block profile %}das {% endblock %}
+{% load static %}
+{% block content %}
+{{profile.user.username}}
+{{profile.bio}}
+{{profile.age}}
+{{profile.gender}}
+{% if user.profile.avatar %}
+        <img src="{{profile.avatar.url}}" style="width: 150px;" alt="">
+{% else %}
+        <p>You don't have your profile created. Contact site admin.</p>
+{% endif %}
+{% endblock %}

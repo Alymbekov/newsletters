@@ -1,13 +1,14 @@
-{% extends 'bases/base.html' %}
+{% extends 'control_panel/control_base.html' %}
 
 {% load crispy_forms_tags %}
 {% crispy form form.helper %}
+{% block title %} Регистрация участников  {% endblock %}
 {% block content %}
     <div class="container">
         <div class="row">
             <div class="col-lg-6 col-lg-offset-3">
                 <h3 class="text-center">
-                    Sign Up For Master Code Online`s NewsLetter
+                    Sign Up
                 {% if messages %}
                 {% for message in messages %}
                 <div {% if message.tags %} class="{{message.tags}}" {% endif %} role="alert">

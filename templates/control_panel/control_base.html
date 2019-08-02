@@ -11,7 +11,7 @@
     <title>Sufee Admin - HTML5 Admin Template</title>
     <meta name="description" content="Sufee Admin - HTML5 Admin Template">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="apple-touch-icon" href="apple-icon.png' %}">
     <link rel="shortcut icon" href="favicon.ico">
 
@@ -40,46 +40,36 @@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-menu" aria-controls="main-menu" aria-expanded="false" aria-label="Toggle navigation">
                     <i class="fa fa-bars"></i>
                 </button>
-                <a class="navbar-brand" href="./"><img src="{% static 'images/logo.png' %}" alt="Logo"></a>
-                <a class="navbar-brand hidden" href="./"><img src="{% static 'images/logo2.png' %}" alt="Logo"></a>
+                <a class="navbar-brand" href="./"><h1>{{ user.username }}</h1></a>
+
+               <!-- <a class="navbar-brand" href="./"><img src="{% static 'images/logo.png' %}" alt="Logo"></a>
+                <a class="navbar-brand hidden" href="./"><img src="{% static 'images/logo2.png' %}" alt="Logo"></a> -->
             </div>
 
             <div id="main-menu" class="main-menu collapse navbar-collapse">
                 <ul class="nav navbar-nav">
                     <li>
-                        <a href="{% url 'control_newsletter_list' %}"> <i class="menu-icon fa fa-dashboard"></i>Все письма</a>
+                        <a href="{% url 'control_newsletter_list' %}"> <i class="menu-icon fa fa-dashboard"></i>Все рассылки </a>
                     </li>
                     <h3 class="menu-title">UI elements</h3><!-- /.menu-title -->
                     <li class="menu-item-has-children dropdown">
-                        <a href="{% url 'control_newsletter' %}" > <i class="menu-icon fa fa-laptop"></i>Написать письмо</a>
+                        <a href="{% url 'control_newsletter' %}" > <i class="menu-icon fa fa-laptop"></i>Написать рассылку</a>
 
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-laptop"></i>Components</a>
-                        <ul class="sub-menu children dropdown-menu">
-                            <li><i class="fa fa-puzzle-piece"></i><a href="ui-buttons.html">Buttons</a></li>
-                            <li><i class="fa fa-id-badge"></i><a href="ui-badges.html">Badges</a></li>
-                            <li><i class="fa fa-bars"></i><a href="ui-tabs.html">Tabs</a></li>
-                            <li><i class="fa fa-share-square-o"></i><a href="ui-social-buttons.html">Social Buttons</a></li>
-                            <li><i class="fa fa-id-card-o"></i><a href="ui-cards.html">Cards</a></li>
-                            <li><i class="fa fa-exclamation-triangle"></i><a href="ui-alerts.html">Alerts</a></li>
-                            <li><i class="fa fa-spinner"></i><a href="ui-progressbar.html">Progress Bars</a></li>
-                            <li><i class="fa fa-fire"></i><a href="ui-modals.html">Modals</a></li>
-                            <li><i class="fa fa-book"></i><a href="ui-switches.html">Switches</a></li>
-                            <li><i class="fa fa-th"></i><a href="ui-grids.html">Grids</a></li>
-                            <li><i class="fa fa-file-word-o"></i><a href="ui-typgraphy.html">Typography</a></li>
-                        </ul>
+                        <a href="{% url 'newsletter_signup' %}" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-laptop"></i>Добавить Участников</a>
+
                     </li>
                     <li class="menu-item-has-children active dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-table"></i>Tables</a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-table"></i>Посмотреть участников</a>
                         <ul class="sub-menu children dropdown-menu">
-                            <li><i class="fa fa-table"></i><a href="tables-basic.html">Basic Table</a></li>
-                            <li><i class="fa fa-table"></i><a href="tables-data.html">Data Table</a></li>
+                            <li><i class="fa fa-table"></i><a href="{% url 'subscribers_list' %}">Все участники</a></li>
+                            <li><i class="fa fa-table"></i><a href="tables-data.html">Категории</a></li>
                         </ul>
                     </li>
                     <li class="menu-item-has-children dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-th"></i>Forms</a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-th"></i>Загрузить файл</a>
                         <ul class="sub-menu children dropdown-menu">
-                            <li><i class="menu-icon fa fa-th"></i><a href="forms-basic.html">Basic Form</a></li>
-                            <li><i class="menu-icon fa fa-th"></i><a href="forms-advanced.html">Advanced Form</a></li>
+                            <li><i class="menu-icon fa fa-th"></i><a href="{% url 'import' %}">Загрузить Excel File</a></li>
+                            <li><i class="menu-icon fa fa-th"></i><a href="{% url 'excel' %}">Выгрузить Excel File</a></li>
                         </ul>
                     </li>
 
@@ -115,9 +105,12 @@
                     <li class="menu-item-has-children dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-glass"></i>Pages</a>
                         <ul class="sub-menu children dropdown-menu">
-                            <li><i class="menu-icon fa fa-sign-in"></i><a href="page-login.html">Login</a></li>
-                            <li><i class="menu-icon fa fa-sign-in"></i><a href="page-register.html">Register</a></li>
-                            <li><i class="menu-icon fa fa-paper-plane"></i><a href="pages-forget.html">Forget Pass</a></li>
+                            {% if user.is_authenticated %}
+                            <li><i class="menu-icon fa fa-sign-in"></i><a href="{% url 'logout' %}">logout</a></li>
+                            <li><i class="menu-icon fa fa-paper-plane"></i><a href="#">Забыли пароль?</a></li>
+                            {% else %}
+                            <li><i class="menu-icon fa fa-sign-in"></i><a href="{% url 'login' %}">Login</a></li>
+                            {% endif %}
                         </ul>
                     </li>
                 </ul>
@@ -220,15 +213,19 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <img class="user-avatar rounded-circle" src="{% static 'images/admin.jpg' %}" alt="User Avatar">
                         </a>
-
                         <div class="user-menu dropdown-menu">
-                                <a class="nav-link" href="#"><i class="fa fa- user"></i>My Profile</a>
-
+                            {% if user.is_authenticated and user.is_staff %}
+                                <a class="nav-link" href="{% block profile %} # {% endblock %}"><i class="fa fa- user"></i>Мой профиль</a>
                                 <a class="nav-link" href="#"><i class="fa fa- user"></i>Notifications <span class="count">13</span></a>
 
-                                <a class="nav-link" href="#"><i class="fa fa -cog"></i>Settings</a>
+                                <a class="nav-link" href="#"><i class="fa fa -cog"></i>Настройка профиля</a>
+                                {% if user.is_authenticated %}
+                                <a class="nav-link" href="#"><i class="fa fa-power -off"></i>Выйти</a>
+                            <a class="nav-link" href="{% url 'logout' %}"><i class="fa fa-power -off"></i>Забыли пароль?</a>
+                                {% else %}
+                                {% endif %}
+                            {% endif %}
 
-                                <a class="nav-link" href="#"><i class="fa fa-power -off"></i>Logout</a>
                         </div>
                     </div>
 
@@ -262,7 +259,9 @@
             <div class="col-sm-4">
                 <div class="page-header float-left">
                     <div class="page-title">
-                        <h1>Dashboard</h1>
+
+                        <h1>{% block title %} {% endblock %}</h1>
+
                     </div>
                 </div>
             </div>
@@ -291,11 +290,15 @@
                         <div class="card-body">
 
         <div>
-            {% block content %}
-            No information
-            {% endblock %}
-        </div>
 
+            <form class="form-inline my-2 my-lg-0" action="">
+          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+
+            {% block content %}
+            No no
+            {% endblock %}
                         </div>
                     </div>
                 </div>

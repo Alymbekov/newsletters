@@ -1,10 +1,10 @@
 from django.contrib import admin
-from .models import NewsLetterUser, Newsletter
+from .models import Subscriber, Newsletter
 
-class NewsLetterAdmin(admin.ModelAdmin):
+
+class SubscriberAdmin(admin.ModelAdmin):
     list_display = (
-        'email', 'date_added',
+        'email', 'first_name','last_name'
     )
-
-admin.site.register(NewsLetterUser, NewsLetterAdmin)
+admin.site.register(Subscriber, SubscriberAdmin)
 admin.site.register(Newsletter)

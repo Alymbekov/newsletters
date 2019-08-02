@@ -18,7 +18,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'newsletter',
+    'accounts',
+    'excel',
+    'import_export',
+
 ]
+
+IMPORT_EXPORT_USE_TRANSACTIONS = True
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -62,6 +69,7 @@ DATABASES = {
 }
 
 
+
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
@@ -99,9 +107,19 @@ STATICFILES_DIRS = [
     )
 ]
 
+LOGIN_REDIRECT_URL = "control_newsletter_list"
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' 
 EMAIL_HOST = 'smtp.gmail.com' 
 EMAIL_USE_TLS = True 
 EMAIL_PORT = 587 
 EMAIL_HOST_USER = 'alymbekovdastan1@gmail.com' 
 EMAIL_HOST_PASSWORD = 'kxtedvuwslyortkc'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+
+FILE_UPLOAD_HANDLERS = ("django_excel.ExcelMemoryFileUploadHandler",
+                        "django_excel.TemporaryExcelFileUploadHandler")
